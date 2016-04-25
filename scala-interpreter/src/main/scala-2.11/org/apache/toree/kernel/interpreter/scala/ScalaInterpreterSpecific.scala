@@ -20,16 +20,17 @@ package org.apache.toree.kernel.interpreter.scala
 import java.io._
 import java.net.URL
 
+import org.apache.spark.scala.ClassServer
 import org.apache.toree.global.StreamState
 import org.apache.toree.interpreter.InterpreterTypes.ExecuteOutput
 import org.apache.toree.interpreter.imports.printers.{WrapperConsole, WrapperSystem}
-import org.apache.toree.interpreter.{ExecuteError, ExecuteFailure, Results, Interpreter}
-import scala.tools.nsc.interpreter.{JPrintWriter, IMain, JLineCompletion, IR}
+import org.apache.toree.interpreter.{ExecuteError, ExecuteFailure, Interpreter, Results}
 
+import scala.tools.nsc.interpreter.{IMain, IR, JLineCompletion, JPrintWriter}
 import scala.concurrent.Future
 import scala.tools.nsc.Settings
 
-trait ScalaInterpreterSpecific { this: ScalaInterpreter =>
+trait ScalaInterpreterSpecific extends ClassServer { this: ScalaInterpreter =>
   private val ExecutionExceptionName = "lastException"
 
   private var iMain: IMain = _
@@ -106,7 +107,7 @@ trait ScalaInterpreterSpecific { this: ScalaInterpreter =>
   /**
    * Not available on Scala 2.11!
    */
-  override def classServerURI: String = ???
+  override def classServerURI: String = classFileServerUri
 
   /**
    * Returns the name of the variable created from the last execution.
